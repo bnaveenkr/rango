@@ -1,2 +1,3 @@
 # rango
-Rango is a raytracer written in golang. 
+Rango is a very simple raytracer written in golang. This is an attempt to learn go. 
+ 
