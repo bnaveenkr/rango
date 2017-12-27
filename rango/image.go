@@ -18,7 +18,7 @@ func InitImage(img *Image, width uint32, height uint32) *Image {
 	img.Width = width
 	img.Height = height
 
-	pixels := (img.Width+1) * (img.Height+1) * 3
+	pixels := (img.Width + 1) * (img.Height + 1) * 3
 
 	img.Data = make([]uint8, pixels)
 	return img
