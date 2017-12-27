@@ -15,18 +15,21 @@ type Image struct {
 }
 
 func InitImage(img *Image, width uint32, height uint32) *Image {
-	pixels := width * height * uint32(RGB)
 	img.Width = width
 	img.Height = height
+
+	pixels := (img.Width+1) * (img.Height+1) * 3
+
 	img.Data = make([]uint8, pixels)
 	return img
 }
 
-func setPixel(img *Image, i uint32, j uint32, color Color) {
+func SetPixel(img *Image, i uint32, j uint32, color Color) {
 
 	h := img.Height
 	w := img.Width
-	var index uint32 = ((h-j)*w + i) * uint32(RGB)
+	var index uint32 = ((h-j)*w + i) * 3
+
 	img.Data[index+0] = color.R
 	img.Data[index+1] = color.G
 	img.Data[index+2] = color.B
@@ -43,7 +46,7 @@ func WriteImage(img *Image, filename string) {
 	check(err)
 
 	defer fp.Close()
-	headerString := fmt.Sprint("P3\n#%s\n%d %d\n%d\n", IMAGE_COMMENT, img.Width, img.Height, 1<<8-1)
+	headerString := fmt.Sprintf("P3\n#%s\n%d %d\n%d\n", IMAGE_COMMENT, img.Width, img.Height, 1<<8-1)
 	fp.WriteString(headerString)
 
 	width := int(img.Width)
@@ -52,7 +55,7 @@ func WriteImage(img *Image, filename string) {
 	for j := 0; j < height; j++ {
 		for i := 0; i < width; i++ {
 			index := (j*width + i) * int(RGB)
-			pixelString := fmt.Sprint("%d %d %d ", img.Data[index+0], img.Data[index+1], img.Data[index+2])
+			pixelString := fmt.Sprintf("%d %d %d ", img.Data[index+0], img.Data[index+1], img.Data[index+2])
 			fp.WriteString(pixelString)
 		}
 	}
