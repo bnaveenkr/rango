@@ -17,3 +17,23 @@ func Vector2Color(v Vector) Color {
 	c.B = uint8(math.Min(1.0, math.Max(0.0, v.Z)) * Uint8Max)
 	return c
 }
+
+func MultiplyColor(a Color, b Color) Color {
+
+	vector := Vector{}
+	vector.X = float64(a.R * b.R)
+	vector.Y = float64(a.G * b.G)
+	vector.Z = float64(a.B * a.B)
+
+	return Vector2Color(Normalize(vector))
+}
+
+func MultiplyColorVector(a Color, b Color) Vector {
+
+	vector := Vector{}
+	vector.X = float64(a.R * b.R)
+	vector.Y = float64(a.G * b.G)
+	vector.Z = float64(a.B * a.B)
+
+	return vector
+}
