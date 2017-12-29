@@ -15,7 +15,7 @@ type Hit struct {
 	Position Vector  /* Position of the ray hit point */
 	Normal   Vector  /* normal at that point */
 	Ray      Ray     /* incident ray at the hit point */
-	ObjectId uint32  /* Object id of the hit object */
+	ObjectId int32  /* Object id of the hit object */
 	T        float64 /* Distance from camera position to nearest hit */
 }
 
@@ -47,7 +47,7 @@ func IntersectTriangle(ray Ray, triangle Triangle) float64 {
 	edge2 := Subtract(triangle.V2, triangle.V0)
 
 	h := Cross(ray.Dir, edge2)
-	a := Dot(edge1, h)
+	a = Dot(edge1, h)
 
 	if a < math.Abs(EPSILON) {
 		return 0
@@ -105,7 +105,7 @@ func IntersectObject(ray Ray, object Object, objId int) Hit {
 	if near > 0 && near < FARPLANE {
 		hit.Position = Add(ray.Src, FloatVecMult(near, ray.Dir))
 		hit.Normal = hitNormal
-		hit.ObjectId = uint32(objId)
+		hit.ObjectId = int32(objId)
 		hit.T = near
 		return hit
 	}
