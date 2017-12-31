@@ -17,7 +17,7 @@ func Cylinder(object *Object, material Material, radius float64, height float64,
 		t1 = deg2rad(t1 * 360)
 
 		t2 = float64(i+1) / float64(resolution)
-		t2 = deg2rad(t1 * 360)
+		t2 = deg2rad(t2 * 360)
 
 		v0 = V(radius*math.Cos(t1), 0, radius*math.Sin(t1))
 		v1 = V(radius*math.Cos(t2), 0, radius*math.Sin(t2))
