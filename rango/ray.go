@@ -1,5 +1,7 @@
 package rango
 
+import "math"
+
 const FARPLANE = 1 << 30
 
 type Ray struct {
@@ -135,4 +137,45 @@ func IntersectScene(ray Ray, scene Scene) Hit {
 	/* objid = -1 means no hit, other vars may contain garbage values */
 	nearHit.ObjectId = -1
 	return nearHit
+}
+
+func TraceShadow(hit Hit, scene Scene, light Light) float64 {
+	var shadowRay Ray
+	shadowRay.Src = hit.Position
+	shadowRay.Dir = Normalize(Subtract(light.Positon, hit.Position))
+
+	for i:=0; i< int(scene.NObjects); i++ {
+		for j:=0; j<int(scene.Objects[i].Ntris); j++ {
+			if IntersectTriangle(shadowRay, scene.Objects[i].Triangles[j]) > EPSILON {
+				return light.Shadow
+			}
+		}
+	}
+	return 0.0
+}
+
+func ReflectRay(hit Hit) Ray {
+
+	var reflectRay Ray
+
+	viewDirection := Negate(hit.Ray.Dir)
+	reflectRay.Src = hit.Position
+
+	/* 2 (N . V) N - V */
+	reflectRay.Dir = Subtract(FloatVecMult(2.0 * Dot(hit.Normal, viewDirection), hit.Normal), viewDirection)
+	return reflectRay
+}
+
+func RefractRay(hit Hit, ir float64) Ray {
+
+	var refract Ray
+	incident := Negate(hit.Ray.Dir)
+	c := Dot(incident, hit.Normal)
+	i := 1.0/ir;
+	s := i*c - math.Sqrt(1.0 - i * i * (1.0 - c*c))
+
+	refract.Dir = Normalize(Subtract(FloatVecMult(s, hit.Normal), FloatVecMult(i, incident)))
+	refract.Src = hit.Position
+
+	return refract
 }
