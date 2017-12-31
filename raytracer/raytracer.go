@@ -38,7 +38,7 @@ func CreateScene(scene *rango.Scene) *rango.Scene {
 	/*Objects*/
 
 	sphere := rango.Object{}
-	rango.Sphere(&sphere, mtlMatte1, 0.9, 3 )
+	rango.Sphere(&sphere, mtlMatte1, 0.9, 3)
 
 	cone := rango.Object{}
 	rango.Cone(&cone, mtlMatte4, 1, 1.5, 32)
@@ -53,10 +53,10 @@ func CreateScene(scene *rango.Scene) *rango.Scene {
 	rango.PlaneXZ(&planeBase, mtlShiny1, 10.0)
 
 	planeLeft := rango.Object{}
-	rango.PlaneXZ(&planeLeft, mtlMatte1, 10.0)
+	rango.PlaneXZ(&planeLeft, mtlShiny1, 10.0)
 
 	planeRight := rango.Object{}
-	rango.PlaneXZ(&planeRight, mtlMatte2, 10.0)
+	rango.PlaneXZ(&planeRight, mtlShiny1, 10.0)
 
 	planeBack := rango.Object{}
 	rango.PlaneXZ(&planeBack, mtlMatte3, 10.0)
@@ -73,7 +73,6 @@ func CreateScene(scene *rango.Scene) *rango.Scene {
 
 	rango.InitScene(scene, 8)
 	rango.AddObjectsToScene(scene, sphere)
-
 	rango.AddObjectsToScene(scene, cube)
 	rango.AddObjectsToScene(scene, cone)
 	rango.AddObjectsToScene(scene, cylinder)
@@ -92,25 +91,27 @@ func trace(ray rango.Ray, scene rango.Scene, light rango.Light, depth int) rango
 
 	if hit.ObjectId >= 0 {
 		diffuse := rango.Diffuse(hit, scene, light)
-		ambient := rango.Ambinet(hit, scene, light)
+		ambient := rango.Ambient(hit, scene, light)
 		specular := rango.Specular(hit, scene, light)
-		outputColorVector = rango.Add(rango.Add(diffuse, ambient), specular)
+		outputColorVector = rango.Add(ambient, rango.Add(diffuse, specular))
 
 		if depth > 0 {
 			/* collect color captured by reflected ray */
-			reflColor := trace(rango.ReflectRay(hit), scene, light, depth - 1);
-			krefl := scene.Objects[hit.ObjectId].Material.Reflectivity;
-			outputColorVector = rango.Add(outputColorVector, rango.FloatVecMult(krefl, reflColor));
+			reflColor := trace(rango.ReflectRay(hit), scene, light, depth-1)
+			krefl := scene.Objects[hit.ObjectId].Material.Reflectivity * 100.0
+			outputColorVector = rango.Add(outputColorVector, rango.FloatVecMult(krefl, reflColor))
 
 			/* collect color captured by refracted ray */
-			refrColor := trace(rango.RefractRay(hit, scene.Objects[hit.ObjectId].Material.Ir), scene, light, depth - 1);
-			krefr := scene.Objects[hit.ObjectId].Material.Traslucency
-			outputColorVector = rango.Add(outputColorVector, rango.FloatVecMult(krefr, refrColor));
+			//refrColor := trace(rango.RefractRay(hit, scene.Objects[hit.ObjectId].Material.Ir), scene, light, depth - 1)
+			//krefr := scene.Objects[hit.ObjectId].Material.Translucency
+			//outputColorVector = rango.Add(outputColorVector, rango.FloatVecMult(krefr, refrColor))
 		}
+
+		/* reduce color by the shadow factor of the light */
+		return rango.FloatVecMult(1.0-rango.TraceShadow(hit, scene, light), outputColorVector)
 	}
 
-	/* reduce color by the shadow factor of the light */
-	return rango.FloatVecMult(1.0 - rango.TraceShadow(hit, scene, light), outputColorVector)
+	return outputColorVector
 }
 
 func main() {
@@ -143,7 +144,7 @@ func main() {
 	for j := 0; j < int(height); j++ {
 		for i := 0; i < int(width); i++ {
 			ray = rango.GenerateRay(i, j, camera)
-			outputColor := rango.Vector2Color(trace(ray, scene, light, 2))
+			outputColor := rango.Vector2Color(trace(ray, scene, light, 3))
 			rango.SetPixel(&outputImage, uint32(i), uint32(j), outputColor)
 		}
 	}

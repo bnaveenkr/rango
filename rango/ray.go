@@ -13,7 +13,7 @@ type Hit struct {
 	Position Vector  /* Position of the ray hit point */
 	Normal   Vector  /* normal at that point */
 	Ray      Ray     /* incident ray at the hit point */
-	ObjectId int32  /* Object id of the hit object */
+	ObjectId int32   /* Object id of the hit object */
 	T        float64 /* Distance from camera position to nearest hit */
 }
 
@@ -62,7 +62,7 @@ func IntersectTriangle(ray Ray, triangle Triangle) float64 {
 
 	q := Cross(s, edge1)
 	v = Dot(ray.Dir, q) * ia
-	if v < 0 ||  u+v > 1.0 {
+	if v < 0 || u+v > 1.0 {
 		return 0.0
 	}
 
@@ -144,8 +144,8 @@ func TraceShadow(hit Hit, scene Scene, light Light) float64 {
 	shadowRay.Src = hit.Position
 	shadowRay.Dir = Normalize(Subtract(light.Positon, hit.Position))
 
-	for i:=0; i< int(scene.NObjects); i++ {
-		for j:=0; j<int(scene.Objects[i].Ntris); j++ {
+	for i := 0; i < int(scene.NObjects); i++ {
+		for j := 0; j < int(scene.Objects[i].Ntris); j++ {
 			if IntersectTriangle(shadowRay, scene.Objects[i].Triangles[j]) > EPSILON {
 				return light.Shadow
 			}
@@ -159,10 +159,11 @@ func ReflectRay(hit Hit) Ray {
 	var reflectRay Ray
 
 	viewDirection := Negate(hit.Ray.Dir)
-	reflectRay.Src = hit.Position
 
 	/* 2 (N . V) N - V */
-	reflectRay.Dir = Subtract(FloatVecMult(2.0 * Dot(hit.Normal, viewDirection), hit.Normal), viewDirection)
+	reflectRay.Dir = Subtract(FloatVecMult(2.0*Dot(hit.Normal, viewDirection), hit.Normal), viewDirection)
+	reflectRay.Src = hit.Position
+
 	return reflectRay
 }
 
@@ -171,8 +172,8 @@ func RefractRay(hit Hit, ir float64) Ray {
 	var refract Ray
 	incident := Negate(hit.Ray.Dir)
 	c := Dot(incident, hit.Normal)
-	i := 1.0/ir;
-	s := i*c - math.Sqrt(1.0 - i * i * (1.0 - c*c))
+	i := 1.0 / ir
+	s := i*c - math.Sqrt(1.0-i*i*(1.0-c*c))
 
 	refract.Dir = Normalize(Subtract(FloatVecMult(s, hit.Normal), FloatVecMult(i, incident)))
 	refract.Src = hit.Position

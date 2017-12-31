@@ -2,7 +2,7 @@ package rango
 
 import "math"
 
-func Ambinet(hit Hit, scene Scene, light Light) Vector {
+func Ambient(hit Hit, scene Scene, light Light) Vector {
 	objId := hit.ObjectId
 
 	return FloatVecMult(scene.Objects[objId].Material.Kambient, MultiplyColorVector(scene.Objects[objId].Material.Color, light.Color))
