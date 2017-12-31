@@ -7,11 +7,11 @@ import (
 
 func CreateScene(scene *rango.Scene) *rango.Scene {
 	/* colors */
-	red := rango.Color{1, 0, 0}
-	green := rango.Color{0, 1, 0}
-	blue := rango.Color{0, 0, 1}
-	purple := rango.Color{1, 0, 1}
-	white := rango.Color{1, 1, 1}
+	red := rango.Color{255, 0, 0}
+	green := rango.Color{0, 255, 0}
+	blue := rango.Color{0, 0, 255}
+	purple := rango.Color{255, 0, 255}
+	white := rango.Color{255, 255, 255}
 
 	/* Materials */
 	mtlShiny1 := rango.Material{}
