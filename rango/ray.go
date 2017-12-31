@@ -1,9 +1,5 @@
 package rango
 
-import (
-	"math"
-)
-
 const FARPLANE = 1 << 30
 
 type Ray struct {
@@ -49,8 +45,8 @@ func IntersectTriangle(ray Ray, triangle Triangle) float64 {
 	h := Cross(ray.Dir, edge2)
 	a = Dot(edge1, h)
 
-	if EPSILON > math.Abs(a) {
-		return 0
+	if a > -EPSILON && a < EPSILON {
+		return 0.0
 	}
 
 	ia = 1.0 / a
@@ -58,14 +54,14 @@ func IntersectTriangle(ray Ray, triangle Triangle) float64 {
 	s := Subtract(ray.Src, triangle.V0)
 	u = Dot(s, h) * ia
 
-	if u < 0 || u > 1 {
-		return 0
+	if u < 0.0 || u > 1.0 {
+		return 0.0
 	}
 
 	q := Cross(s, edge1)
 	v = Dot(ray.Dir, q) * ia
-	if u < 0 || u+v > 1 {
-		return 0
+	if v < 0 ||  u+v > 1.0 {
+		return 0.0
 	}
 
 	t = Dot(edge2, q) * ia
