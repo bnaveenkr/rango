@@ -49,7 +49,7 @@ func IntersectTriangle(ray Ray, triangle Triangle) float64 {
 	h := Cross(ray.Dir, edge2)
 	a = Dot(edge1, h)
 
-	if a < math.Abs(EPSILON) {
+	if EPSILON > math.Abs(a) {
 		return 0
 	}
 
@@ -69,11 +69,11 @@ func IntersectTriangle(ray Ray, triangle Triangle) float64 {
 	}
 
 	t = Dot(edge2, q) * ia
-	if t < EPSILON {
-		return 0
+	if t > EPSILON {
+		return t
 	}
 
-	return t
+	return 0
 }
 
 func IntersectObject(ray Ray, object Object, objId int) Hit {
@@ -91,7 +91,9 @@ func IntersectObject(ray Ray, object Object, objId int) Hit {
 		/* Self occlusion check */
 		if t > 0 && t < near {
 
-			normal := Normalize(Cross(Subtract(object.Triangles[i].V1, object.Triangles[i].V0), Subtract(object.Triangles[i].V2, object.Triangles[i].V0)))
+			edge1 := Subtract(object.Triangles[i].V1, object.Triangles[i].V0)
+			edge2 := Subtract(object.Triangles[i].V2, object.Triangles[i].V0)
+			normal := Normalize(Cross(edge1, edge2))
 
 			/* only front facing triangles respond */
 			if Dot(normal, ray.Dir) < EPSILON {
