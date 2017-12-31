@@ -7,11 +7,11 @@ import (
 
 func CreateScene(scene *rango.Scene) *rango.Scene {
 	/* colors */
-	red := rango.Color{255, 0, 0}
-	green := rango.Color{0, 255, 0}
-	blue := rango.Color{0, 0, 255}
-	purple := rango.Color{255, 0, 255}
-	white := rango.Color{255, 255, 255}
+	red := rango.Color{1, 0, 0}
+	green := rango.Color{0, 1, 0}
+	blue := rango.Color{0, 0, 1}
+	purple := rango.Color{1, 0, 1}
+	white := rango.Color{1, 1, 1}
 
 	/* Materials */
 	mtlShiny1 := rango.Material{}
@@ -66,11 +66,11 @@ func CreateScene(scene *rango.Scene) *rango.Scene {
 	rango.TransformObject(&planeRight, rango.MatrixMultiply(rango.Translate(4, 0, -4), rango.RotateZ(90)))
 	rango.TransformObject(&planeBack, rango.MatrixMultiply(rango.Translate(1, 0, -6), rango.RotateX(90)))
 
-	rango.InitScene(scene, 8)
+	rango.InitScene(scene, 7)
 	rango.AddObjectsToScene(scene, cube)
 	rango.AddObjectsToScene(scene, cone)
 	rango.AddObjectsToScene(scene, cylinder)
-	rango.AddObjectsToScene(scene, planeBack)
+	rango.AddObjectsToScene(scene, planeBase)
 	rango.AddObjectsToScene(scene, planeRight)
 	rango.AddObjectsToScene(scene, planeLeft)
 	rango.AddObjectsToScene(scene, planeBack)
@@ -82,12 +82,12 @@ func trace(ray rango.Ray, scene rango.Scene, light rango.Light) rango.Vector {
 
 	outputColorVector := rango.Vector{0, 0, 0}
 	hit := rango.IntersectScene(ray, scene)
+
 	if hit.ObjectId >= 0 {
 		diffuse := rango.Diffuse(hit, scene, light)
 		ambient := rango.Ambinet(hit, scene, light)
 		outputColorVector = rango.Add(diffuse, ambient)
 	}
-	fmt.Println(outputColorVector)
 	return outputColorVector
 }
 
@@ -102,7 +102,7 @@ func main() {
 
 	/* Setup lights */
 	lColor := rango.Color{255, 255, 255}
-	lPosition := rango.Vector{01, 4, 4}
+	lPosition := rango.Vector{-1, 4, 4}
 	light := rango.Light{lPosition, lColor, 0.3}
 
 	/*Setup Camera*/
@@ -118,12 +118,11 @@ func main() {
 	var ray rango.Ray
 
 	fmt.Println("Tracing started")
-	for j := 0; j < int(height)-1; j++ {
-		for i := 0; j < int(width)-1; i++ {
+	for j := 0; j < int(height); j++ {
+		for i := 0; i < int(width); i++ {
 			ray = rango.GenerateRay(i, j, camera)
-			rango.Vector2Color(trace(ray, scene, light))
-			//fmt.Println(outputColor)
-			//rango.SetPixel(&outputImage, uint32(i), uint32(j), outputColor)
+			outputColor := rango.Vector2Color(trace(ray, scene, light))
+			rango.SetPixel(&outputImage, uint32(i), uint32(j), outputColor)
 		}
 	}
 	fmt.Println("Tracing done")
