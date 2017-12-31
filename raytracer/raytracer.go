@@ -60,16 +60,17 @@ func CreateScene(scene *rango.Scene) *rango.Scene {
 
 	rango.TransformObject(&cone, rango.Translate(2, 0, -2.8))
 	rango.TransformObject(&cube, rango.MatrixMultiply(rango.Translate(2, 0.5, -1.0), rango.RotateY(45.0)))
-	rango.TransformObject(&cylinder, rango.Translate(0, 0, -1))
+
+	rango.TransformObject(&cylinder, rango.Translate(-0.0, 0.0, -1))
 	rango.TransformObject(&planeBase, rango.Translate(1, 0, -4))
 	rango.TransformObject(&planeLeft, rango.MatrixMultiply(rango.Translate(-2, 0, -4), rango.RotateZ(-90)))
 	rango.TransformObject(&planeRight, rango.MatrixMultiply(rango.Translate(4, 0, -4), rango.RotateZ(90)))
 	rango.TransformObject(&planeBack, rango.MatrixMultiply(rango.Translate(1, 0, -6), rango.RotateX(90)))
 
 	rango.InitScene(scene, 7)
-	//rango.AddObjectsToScene(scene, cube)
-	//rango.AddObjectsToScene(scene, cone)
-	//rango.AddObjectsToScene(scene, cylinder)
+	rango.AddObjectsToScene(scene, cube)
+	rango.AddObjectsToScene(scene, cone)
+	rango.AddObjectsToScene(scene, cylinder)
 	rango.AddObjectsToScene(scene, planeBase)
 	rango.AddObjectsToScene(scene, planeRight)
 	rango.AddObjectsToScene(scene, planeLeft)
