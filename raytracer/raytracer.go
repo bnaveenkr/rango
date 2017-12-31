@@ -115,8 +115,8 @@ func trace(ray rango.Ray, scene rango.Scene, light rango.Light, depth int) rango
 
 func main() {
 
-	width := 320.0
-	height := 240.0
+	width := 1280.0
+	height := 960.0
 
 	/* Setup Scene */
 	scene := rango.Scene{}
