@@ -7,7 +7,7 @@ type Material struct {
 	Kspecular    float64 /* Specular constant */
 	Shininess    float64 /* Exponent of specular component */
 	Reflectivity float64 /* Amount of reflectivity of the surface, 0.0f means a matt object, 1.0f means a mirror */
-	Traslucency  float64 /* Amount of translucency of the surface, 0.0f means opaque object, 1.0f means a Saint Gobain's glass */
+	Translucency float64 /* Amount of translucency of the surface, 0.0f means opaque object, 1.0f means a Saint Gobain's glass */
 	Ir           float64 /* Index of refraction of a translucent object */
 }
 
@@ -19,7 +19,7 @@ func SetMaterial(material *Material, color Color, ambient float64, diffuse float
 	material.Kspecular = specular
 	material.Shininess = shininess
 	material.Reflectivity = reflectivity
-	material.Traslucency = translucency
+	material.Translucency = translucency
 	material.Ir = ir
 
 	return material

@@ -2,20 +2,20 @@ package rango
 
 import "math"
 
-func subdivide(src Triangle, dest *[4]Triangle, radius float64)  {
+func subdivide(src Triangle, dest *[4]Triangle, radius float64) {
 	/* mid points of the edges of the triangle */
 	mid0 := FloatVecMult(radius, Normalize(Add(src.V0, src.V1)))
 	mid1 := FloatVecMult(radius, Normalize(Add(src.V1, src.V2)))
 	mid2 := FloatVecMult(radius, Normalize(Add(src.V2, src.V0)))
 
 	/* input triangle subdivided into 4 based on the edges mid point */
-	SetTriangle(&dest[0], mid0,   mid1,   mid2);
-	SetTriangle(&dest[1], src.V0, mid0,   mid2);
-	SetTriangle(&dest[2], mid0,   src.V1, mid1);
-	SetTriangle(&dest[3], mid2,   mid1,   src.V2);
+	SetTriangle(&dest[0], mid0, mid1, mid2)
+	SetTriangle(&dest[1], src.V0, mid0, mid2)
+	SetTriangle(&dest[2], mid0, src.V1, mid1)
+	SetTriangle(&dest[3], mid2, mid1, src.V2)
 }
 
-func subdivideRecursively(recursionDepth int, in Triangle, out []Triangle, outIndex int, radius float64)  {
+func subdivideRecursively(recursionDepth int, in Triangle, out []Triangle, outIndex int, radius float64) {
 
 	var triangles [4]Triangle
 	/* span is the amount subdivide should jump so that final triangles are placed fine */
@@ -24,8 +24,8 @@ func subdivideRecursively(recursionDepth int, in Triangle, out []Triangle, outIn
 	if recursionDepth > 0 {
 		/* in triangle subdivided, and those are further sent for subdivision */
 		subdivide(in, &triangles, radius)
-		for i := 0; i<4; i++ {
-			subdivideRecursively(recursionDepth-1, triangles[i], out, outIndex + i * span, radius)
+		for i := 0; i < 4; i++ {
+			subdivideRecursively(recursionDepth-1, triangles[i], out, outIndex+i*span, radius)
 		}
 	} else {
 		/* recursion has ended, lets populate the incoming triangle to *out */
@@ -34,7 +34,7 @@ func subdivideRecursively(recursionDepth int, in Triangle, out []Triangle, outIn
 
 }
 
-func Sphere(object *Object, material Material, radius float64,resolution int) *Object {
+func Sphere(object *Object, material Material, radius float64, resolution int) *Object {
 
 	var octaHedron [8]Triangle
 	var vertices [6]Vector
@@ -45,7 +45,7 @@ func Sphere(object *Object, material Material, radius float64,resolution int) *O
 	vertices[0] = V(0.0, 0.0, -radius)
 	vertices[1] = V(0.0, -radius, 0.0)
 	vertices[2] = V(-radius, 0.0, 0.0)
-	vertices[3] = V(0.0, 0.0,  radius)
+	vertices[3] = V(0.0, 0.0, radius)
 	vertices[4] = V(0.0, radius, 0.0)
 	vertices[5] = V(radius, 0.0, 0.0)
 
@@ -62,7 +62,7 @@ func Sphere(object *Object, material Material, radius float64,resolution int) *O
 	SetTriangle(&octaHedron[7], vertices[2], vertices[1], vertices[2])
 
 	/* Lets start subdividing these 8 triangles recursively */
-	for i :=0; i<8; i++ {
+	for i := 0; i < 8; i++ {
 		subdivideRecursively(resolution, octaHedron[i], out, i*int(triangleCount)/8, radius)
 	}
 
