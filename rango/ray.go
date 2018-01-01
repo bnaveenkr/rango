@@ -107,6 +107,7 @@ func IntersectObject(ray Ray, object Object, objId int) Hit {
 		hit.Normal = hitNormal
 		hit.ObjectId = int32(objId)
 		hit.T = near
+		hit.Ray = ray
 		return hit
 	}
 
