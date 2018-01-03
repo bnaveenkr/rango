@@ -59,7 +59,7 @@ func Sphere(object *Object, material Material, radius float64, resolution int) *
 	SetTriangle(&octaHedron[4], vertices[3], vertices[1], vertices[5])
 	SetTriangle(&octaHedron[5], vertices[5], vertices[1], vertices[0])
 	SetTriangle(&octaHedron[6], vertices[0], vertices[1], vertices[2])
-	SetTriangle(&octaHedron[7], vertices[2], vertices[1], vertices[2])
+	SetTriangle(&octaHedron[7], vertices[2], vertices[1], vertices[3])
 
 	/* Lets start subdividing these 8 triangles recursively */
 	for i := 0; i < 8; i++ {
