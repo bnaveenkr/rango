@@ -22,6 +22,15 @@ func AddObjectsToScene(scene *Scene, object Object) *Scene {
 	return scene
 }
 
+func TrianglesCount(scene Scene) uint64 {
+
+	var triangleCount uint64
+
+	for i:=0; i< int(scene.NObjects); i++ {
+		triangleCount += scene.Objects[i].Ntris
+	}
+	return triangleCount
+}
 func SetScene() {
 
 }
