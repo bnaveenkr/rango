@@ -118,6 +118,7 @@ func main() {
 
 	width := 1280.0
 	height := 960.0
+	depth := 2
 
 	/* Setup Scene */
 	scene := rango.Scene{}
@@ -140,11 +141,11 @@ func main() {
 
 	var ray rango.Ray
 
-	fmt.Println("Tracing started")
+	fmt.Printf("Tracing started, Rays: %d, TriangleCount: %d, Recursion: %d\n", int(width*height), rango.TrianglesCount(scene), depth)
 	for j := 0; j < int(height); j++ {
 		for i := 0; i < int(width); i++ {
 			ray = rango.GenerateRay(i, j, camera)
-			outputColor := rango.Vector2Color(trace(ray, scene, light, 3))
+			outputColor := rango.Vector2Color(trace(ray, scene, light, depth))
 			rango.SetPixel(&outputImage, uint32(i), uint32(j), outputColor)
 		}
 	}
